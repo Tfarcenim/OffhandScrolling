@@ -2,7 +2,12 @@ package tfar.offhandscrolling.client;
 
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.item.ItemStack;
 import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.glfw.GLFW;
 
@@ -27,20 +32,33 @@ public class ModClient {
                     if (minecraft.player.isSpectator()) {
                  //       minecraft.gui.getSpectatorGui().onHotbarSelected(i);
                     } else {
-                        swapOffhand(i);
+                        trySwapOffhand(i);
                     }
                 }
             }
         }
     }
 
-    public static void swapOffhand(int newSlot) {
+    public static boolean trySwapOffhand(int newSlot) {
         int oldSlot = offhandSelected;
         if (oldSlot != newSlot) {
 
+            Minecraft minecraft = Minecraft.getInstance();
+            Player player = minecraft.player;
+            if (player != null) {
+                AbstractContainerMenu menu = player.inventoryMenu;
 
+                ItemStack offhandStack = player.getInventory().offhand.get(0);
+
+                int oldInvSlot = oldSlot + 27;
+
+                minecraft.gameMode.handleInventoryMouseClick(menu.containerId, oldInvSlot, 40, ClickType.SWAP, player);
+                minecraft.gameMode.handleInventoryMouseClick(menu.containerId, newSlot + 27, 40, ClickType.SWAP, player);
+                offhandSelected = newSlot;
+                return true;
+            }
         }
-        offhandSelected = newSlot;
+        return false;
     }
 
     public static boolean areAnyHotbarKeysDown(Minecraft minecraft) {
@@ -53,7 +71,7 @@ public class ModClient {
     }
 
     public static boolean handleScroll(Inventory inventory, double direction) {
-        if (MODIFIER.consumeClick()) {
+        if (MODIFIER.isDown()) {
             int i = (int)Math.signum(direction);
             int newOffhandSelected = offhandSelected;
             for(newOffhandSelected -= i; newOffhandSelected < 0; newOffhandSelected += 9) {
@@ -63,8 +81,7 @@ public class ModClient {
                 newOffhandSelected -= 9;
             }
 
-            swapOffhand(newOffhandSelected);
-
+            return trySwapOffhand(newOffhandSelected);
         }
         return false;
     }
