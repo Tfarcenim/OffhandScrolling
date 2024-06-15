@@ -1,4 +1,4 @@
-package com.example.examplemod;
+package tfar.offhandscrolling;
 
 import net.fabricmc.api.ModInitializer;
 
@@ -12,7 +12,7 @@ public class ExampleMod implements ModInitializer {
         // project.
 
         // Use Fabric to bootstrap the Common mod.
-        CommonClass.LOG.info("Hello Fabric world!");
-        CommonClass.init();
+        OffhandScrolling.LOG.info("Hello Fabric world!");
+        OffhandScrolling.init();
     }
 }

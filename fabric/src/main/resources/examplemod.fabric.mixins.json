@@ -7,7 +7,7 @@
     "mixins": [
     ],
     "client": [
-        "MixinTitleScreen"
+      "tfar.offhandscrolling.mixin.MixinTitleScreen"
     ],
     "server": [
     ],

@@ -1,19 +1,17 @@
-package com.example.examplemod.mixin;
+package tfar.offhandscrolling.mixin;
 
-import com.example.examplemod.CommonClass;
 import net.minecraft.client.Minecraft;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import tfar.offhandscrolling.client.ModClient;
 
 @Mixin(Minecraft.class)
 public class MixinMinecraft {
     
-    @Inject(at = @At("TAIL"), method = "<init>")
+    @Inject(at = @At("HEAD"), method = "handleKeybinds")
     private void init(CallbackInfo info) {
-        
-        CommonClass.LOG.info("This line is printed by an example mod common mixin!");
-        CommonClass.LOG.info("MC Version: {}", Minecraft.getInstance().getVersionType());
+        ModClient.handleKeybinds((Minecraft)(Object)this);
     }
 }
